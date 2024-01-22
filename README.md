@@ -1,37 +1,26 @@
-# Example app with next-sass
+# README
 
-This example demonstrates how to use Next.js' built-in Global Sass/Scss imports and Component-Level Sass/Scss modules support.
+This example repo is able to show the performance implications of using fragments across many components. Note that this is using React 17 and not React 18.
 
-## Preview
+## How to use it
 
-Preview the example live on [StackBlitz](http://stackblitz.com/):
+- run `npm ci && npm run dev`
+- navigate to http://localhost:3000/ to load the data via a single root useQuery call or http://localhost:3000/fragments to load the subcomponents using useFragment calls
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-next-sass)
+## Why are we doing this performance analysis?
 
-## Deploy your own
+We want to simplify our development experience by co-locating a component's data requirements via fragments. We have very strict site-speed requirements and therefore we don't want to cause degradations in Total Blocking Time and Time to Interactive. We did an experiment to test what our potential long term performance would be if many components started to use fragments and we saw that these changes dropped our Total Blocking Time quite significantly. Upgrading to React 18 will help with Total Blocking Time but the slowdown will still push down subsequent long times further back impacting our Time to Interactive timing, Largest Contentful Paint, etc.
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example):
+## Performance investigation
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-next-sass&project-name=with-next-sass&repository-name=with-next-sass)
+This repo tries to create a minimum environment to test some of the performance. I am not using any CPU slowdown and this is being run on a Apple M1 Max.
 
-## How to use
+Loading the components using a single useQuery and prop drilling takes (i.e. going to http://localhost:3000/) we take about ~57ms in total to render the components. You can see the highlighted red section which are these subcomponent loading.
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
+![Not Using Fragments Chrome Profile](./images/not-using-fragments-chrome-profile.png))
 
-```bash
-npx create-next-app --example with-next-sass with-next-sass-app
-# or
-yarn create next-app --example with-next-sass with-next-sass-app
-```
+Now Loading the page with the characters loaded via useFragment calls (i.e. going to http://localhost:3000/fragments), it takes ~92ms to hydrate the components when the Character list uses fragments under the hood.
 
-Run production build with:
+![Using Fragments Chrome Profile](./images/using-fragments-chrome-profile.png)
 
-```bash
-npm run build
-npm run start
-# or
-yarn build
-yarn start
-```
-
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+This is indicating that it is taking about ~35ms extra to use useFragment calls. If we remove the base code that does the useQuery, because both components do it, the useFragments approach takes ~58ms and the non fragment approach ~17ms, a ~340% slowdown. 

@@ -18,7 +18,7 @@ export default function Home() {
     return (
         <div className="app">
             <ApolloProvider client={client}>
-                <Episodes useFragments={false}/>
+                <Episodes useFragments={true}/>
             </ApolloProvider>
         </div>
     )

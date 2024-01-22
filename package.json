@@ -3,15 +3,25 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "graphql:codegen": "graphql-codegen --config ./graphql-codegen.ts",
+    "postinstall": "npm run graphql:codegen"
   },
   "dependencies": {
+    "@apollo/client": "^3.8.10",
     "next": "12.1.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "sass": "1.26.3"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/introspection": "^4.0.0",
+    "@graphql-codegen/near-operation-file-preset": "^3.0.0",
+    "@graphql-codegen/schema-ast": "^4.0.0",
+    "@graphql-codegen/typescript": "^4.0.1",
+    "@graphql-codegen/typescript-operations": "^4.0.1",
+    "@graphql-codegen/typescript-react-apollo": "^4.1.0",
     "@types/node": "^17.0.18",
     "@types/react": "^17.0.39",
     "typescript": "^5.3.3"

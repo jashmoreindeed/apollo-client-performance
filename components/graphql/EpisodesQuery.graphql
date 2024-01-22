@@ -1,0 +1,20 @@
+query GetEpisodes {
+  episodes {
+    results {
+      id
+      name
+      air_date
+      episode
+      created
+      characters {
+        ...CharacterFragment
+      }
+    }
+    info{
+      count
+      pages
+      next
+      prev
+    }
+  }
+}

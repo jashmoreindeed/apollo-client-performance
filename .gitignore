@@ -33,3 +33,8 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+
+# Graphql
+__generated__
+src/graphql/schema.json

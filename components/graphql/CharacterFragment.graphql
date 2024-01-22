@@ -1,0 +1,22 @@
+fragment CharacterFragment on Character {
+    id
+    name
+    type
+    status
+    species
+    gender
+    origin {
+        ...LocationFragment
+    }
+    location {
+        ...LocationFragment
+    }
+}
+
+fragment LocationFragment on Location {
+    id
+    name
+    type
+    dimension
+    created
+}
